@@ -20,15 +20,5 @@ public class Actor : MonoBehaviour
     public int orientation;
 
     public void Attack() {
-        myCollider.enabled = false;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(orientation, 0), blockingLayer);
-        myCollider.enabled = true;
-        if (hit.transform == null) {
-            return;
-        }
-        if (Math.Abs(hit.transform.position.x - transform.position.x) <= attackRange) {
-            GameObject hitObject = hit.rigidbody.gameObject;
-            GameManager.instance.Attack(gameObject, hitObject);
-        }
     }
 }

@@ -12,15 +12,6 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI playerHealthText;
     public TextMeshProUGUI enemyHealthText;
-
-    public void Attack(GameObject attacker, GameObject victim) {
-        if (attacker.tag == "Player") {
-            enemyHealth -= attacker.GetComponent<Actor>().damage;
-        }
-        else {
-            playerHealth -= attacker.GetComponent<Actor>().damage;
-        }
-    }
     
     private void Awake() {
         // singleton

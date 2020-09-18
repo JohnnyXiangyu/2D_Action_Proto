@@ -16,11 +16,27 @@ public class PlayerStatus : MonoBehaviour
     public int attackable = 0;
     public int castable = 0;
 
+    // special effects ////////////////////////////////////////////////////////
+    public float armorFactor = 1;
+    public Queue<float> shields;
+
+
+    // public methods /////////////////////////////////////////////////////////
+    public void GetAttack(float rawDamage) {
+        float currentArmorFactor = armorFactor;
+        if (shields.Count > 0) {
+            currentArmorFactor *= shields.Dequeue();
+        }
+
+        health -= rawDamage * currentArmorFactor;
+        
+        // TODO: broadcast this damage to all components
+    }
 
     // system methods /////////////////////////////////////////////////////////
-    void Start()
-    {
-        
+    private void Start() {
+        shields = new Queue<float>();
+        shields.Clear();
     }
 
     void Update()

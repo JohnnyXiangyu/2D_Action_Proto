@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +11,11 @@ using UnityEngine;
 /// </summary>
 public class Attack : SkillTemplate
 {
+    // attack parameters ///////////////////////////////////////////
+    public float damage = 10;
+    public float range = 1.1f;
+    public LayerMask enemyLayer;
+    
     // lifespan controls ///////////////////////////////////////////
     public float hardStraightTime = 0.5f;
     public float keyFrame = 0.2f;
@@ -40,10 +46,17 @@ public class Attack : SkillTemplate
         }
     }
 
+
     // update events ///////////////////////////////////////////////
     public void AttackKeyFrame() {
         attackTimer++;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(userRB.position, range, enemyLayer);
+        foreach(Collider2D enemy in hits) {
+            GameObject enemyObj = enemy.gameObject;
+            enemyObj.GetComponent<PlayerStatus>().GetAttack(damage);
+        }
     }
+
     private void ResetToDefault() { // reset skill parameters to default
         userStatus.moveable--;
         userStatus.castable--;
@@ -53,9 +66,11 @@ public class Attack : SkillTemplate
         gameObject.SetActive(false);
     }
 
+
     // system methods //////////////////////////////////////////////
     private void Start() {
         skillName = "ATTACK";
+        Debug.Log(Time.fixedDeltaTime);
     }
     void FixedUpdate() {
         mainTimer += Time.fixedDeltaTime;
