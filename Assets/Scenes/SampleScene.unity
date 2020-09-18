@@ -342,6 +342,8 @@ MonoBehaviour:
   moveable: 0
   attackable: 0
   castable: 0
+  activateSkill: 
+  endTime: -1
   armorFactor: 1
 --- !u!95 &154139029
 Animator:
@@ -391,22 +393,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a843dcd3f3b405b49b8d737649f14ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: 
+  skillName: ATTACK
+  description: 
   user: {fileID: 0}
-  damage: 10
-  range: 0.9
+  mainTimer: -1
+  damage:
+  - 10
+  - 10
+  - 15
+  range:
+  - 1
+  - 1
+  - 1.2
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
   hardStraightTime:
   - 0.3
-  - 0.3
-  - 0.4
+  - 0.2
+  - 0.5
   keyFrame:
   - 0.02
   - 0.02
   - 0.02
-  comboInterval: 0.1
+  comboInterval: 0.8
   maxCombo: 3
 --- !u!4 &168270509
 Transform:
@@ -1660,6 +1670,8 @@ MonoBehaviour:
   moveable: 0
   attackable: 0
   castable: 0
+  activateSkill: 
+  endTime: -1
   armorFactor: 1
 --- !u!1 &1898138501
 GameObject:

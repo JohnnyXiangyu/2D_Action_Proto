@@ -16,6 +16,10 @@ public class PlayerStatus : MonoBehaviour
     public int attackable = 0;
     public int castable = 0;
 
+    // skill system ///////////////////////////////////////////////////////////
+    public string activateSkill = "";
+    public float endTime = -1;
+
     // special effects ////////////////////////////////////////////////////////
     public float armorFactor = 1;
     public Queue<float> shields;
