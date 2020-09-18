@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Authentication;
 using UnityEngine;
 
 /// <summary>
@@ -16,17 +17,22 @@ public class Attack : SkillTemplate
     public float range = 1.1f;
     public LayerMask enemyLayer;
     
-    // lifespan controls ///////////////////////////////////////////
-    public float hardStraightTime = 0.5f;
-    public float keyFrame = 0.2f;
+    // lifecycle controls //////////////////////////////////////////
+    public float[] hardStraightTime;
+    public float[] keyFrame;
+    public float comboInterval = 0.2f;
+    public int maxCombo = 3;
+
     private float mainTimer = -1;
-    private int attackTimer = 0;
+    private bool hasAttacked = false;
+    private int comboIndex = 0;
+    private int nextCombo = 0;
 
     // user references /////////////////////////////////////////////
     private GameObject userObject = null;
     private PlayerStatus userStatus = null;
     private Rigidbody2D userRB = null;
-    private Collider2D userCD = null;
+    // private Collider2D userCD = null;
 
 
     // user methods ////////////////////////////////////////////////
@@ -36,7 +42,7 @@ public class Attack : SkillTemplate
             userObject = newUser;
             userStatus = newUser.GetComponent<PlayerStatus>();
             userRB = newUser.GetComponent<Rigidbody2D>();
-            userCD = newUser.GetComponent<Collider2D>();
+            // userCD = newUser.GetComponent<Collider2D>();
 
             // lock behavior
             userStatus.moveable++;
@@ -44,12 +50,17 @@ public class Attack : SkillTemplate
 
             userObject.GetComponent<Animator>().SetTrigger("Attacks");
         }
+        else if (mainTimer > hardStraightTime[comboIndex] * 0.2f) {
+            if (comboIndex + 1 < maxCombo) {
+                nextCombo++;
+            }
+        }
     }
 
 
     // update events ///////////////////////////////////////////////
     public void AttackKeyFrame() {
-        attackTimer++;
+        hasAttacked = true;
         Collider2D[] hits = Physics2D.OverlapCircleAll(userRB.position, range, enemyLayer);
         foreach(Collider2D enemy in hits) {
             GameObject enemyObj = enemy.gameObject;
@@ -60,8 +71,11 @@ public class Attack : SkillTemplate
     private void ResetToDefault() { // reset skill parameters to default
         userStatus.moveable--;
         userStatus.castable--;
-        attackTimer = 0;
+
         mainTimer = -1;
+        hasAttacked = false;
+        comboIndex = 0;
+        nextCombo = 0;
 
         gameObject.SetActive(false);
     }
@@ -74,10 +88,21 @@ public class Attack : SkillTemplate
     }
     void FixedUpdate() {
         mainTimer += Time.fixedDeltaTime;
-        if (mainTimer >= keyFrame && attackTimer <= 0) {
+
+        if (mainTimer >= keyFrame[comboIndex] && !hasAttacked) {
             AttackKeyFrame();
         }
-        else if (mainTimer >= hardStraightTime)
-            ResetToDefault();
+        else if (mainTimer >= hardStraightTime[comboIndex]) {
+            if (nextCombo == comboIndex + 1) {
+                comboIndex++;
+                mainTimer = 0;
+                userObject.GetComponent<Animator>().SetTrigger("Attacks");
+                hasAttacked = false;
+            }
+            else {
+                ResetToDefault();
+            }
+        }
+    
     }
 }

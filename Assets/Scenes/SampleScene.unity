@@ -398,8 +398,16 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  hardStraightTime: 0.4
-  keyFrame: 0.04
+  hardStraightTime:
+  - 0.3
+  - 0.3
+  - 0.4
+  keyFrame:
+  - 0.02
+  - 0.02
+  - 0.02
+  comboInterval: 0.1
+  maxCombo: 3
 --- !u!4 &168270509
 Transform:
   m_ObjectHideFlags: 0
