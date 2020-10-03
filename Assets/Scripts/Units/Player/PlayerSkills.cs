@@ -38,27 +38,18 @@ public class PlayerSkills : MonoBehaviour
     private void CheckInput() { // check input and execute
         
         if (Input.GetKeyDown(attackKey) && gameObject.GetComponent<PlayerStatus>().attackable == 0) {
-            if (!attack.activeSelf)
-                attack.SetActive(true);
-            attack.GetComponent<SkillTemplate>().ActivateSkill(gameObject);
+            Instantiate(attack).GetComponent<SkillTemplate>().user = gameObject;
         }
 
         for (int i = 0; i < skills.Length; i++) {
             if (Input.GetKeyDown(skillKeys[i]) && gameObject.GetComponent<PlayerStatus>().castable == 0) {
-                if (!skills[i].activeSelf)
-                    skills[i].SetActive(true);
-                // TODO: call active
+                Instantiate(skills[i]).GetComponent<SkillTemplate>().user = gameObject;
             }
         }
     }
 
 
     // system methods /////////////////////////////////////////////////////////
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         CheckInput();

@@ -75,7 +75,7 @@ public class Attack : SkillTemplate {
     private void ResetToDefault() { // reset skill parameters to default
         userStatus.moveable--;
         userStatus.castable--;
-        userStatus.attackable--;
+        if (userStatus.attackable > 0) userStatus.attackable--;
 
         mainTimer = -1;
         hasAttacked = false;
@@ -92,8 +92,6 @@ public class Attack : SkillTemplate {
 
     // system methods //////////////////////////////////////////////
     private void Start() {
-        skillName = "ATTACK";
-        Debug.Log(Time.fixedDeltaTime);
     }
 
     void FixedUpdate() {
@@ -101,6 +99,9 @@ public class Attack : SkillTemplate {
 
         if (mainTimer >= keyFrame[comboCount] && !hasAttacked) {
             AttackKeyFrame();
+        }
+        else if (mainTimer >= hardStraightTime[comboCount] - comboInterval && mainTimer <= hardStraightTime[comboCount]) {
+            userStatus.attackable--;
         }
         else if (mainTimer >= hardStraightTime[comboCount]) {
             ResetToDefault();

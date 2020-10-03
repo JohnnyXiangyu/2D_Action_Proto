@@ -28,8 +28,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if (gameObject.GetComponent<PlayerStatus>().moveable != 0)
-            return; // move unless forbidden
+        if (gameObject.GetComponent<PlayerStatus>().moveable != 0) {
+            gameObject.GetComponent<Animator>().SetBool("Running", false);
+            return;
+        }
 
         movement.x = (Input.GetKey(rightKey) ? 1 : 0) - (Input.GetKey(leftKey) ? 1 : 0);
 
