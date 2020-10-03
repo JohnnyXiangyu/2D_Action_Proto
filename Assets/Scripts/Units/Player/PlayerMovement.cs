@@ -40,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
         else {
             gameObject.GetComponent<Animator>().SetBool("Running", true);
             rb.MovePosition(rb.position + movement * (unitPerSecond * Time.fixedDeltaTime));
+
+            gameObject.GetComponent<PlayerStatus>().isFacingRight = (movement.x > 0) ? true : false;
         }
 
     }

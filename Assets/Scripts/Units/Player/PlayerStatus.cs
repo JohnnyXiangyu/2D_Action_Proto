@@ -11,7 +11,7 @@ public class PlayerStatus : MonoBehaviour
     public float health = 100;
     public float mana = 100;
 
-    // binary states //////////////////////////////////////////////////////////
+    // action locks ///////////////////////////////////////////////////////////
     public int moveable = 0;
     public int attackable = 0;
     public int castable = 0;
@@ -23,6 +23,7 @@ public class PlayerStatus : MonoBehaviour
     // special effects ////////////////////////////////////////////////////////
     public float armorFactor = 1;
     public Queue<float> shields;
+    public bool isFacingRight = true;
 
 
     // public methods /////////////////////////////////////////////////////////
@@ -33,8 +34,6 @@ public class PlayerStatus : MonoBehaviour
         }
 
         health -= rawDamage * currentArmorFactor;
-        
-        // TODO: broadcast this damage to all components
     }
 
     // system methods /////////////////////////////////////////////////////////
@@ -57,5 +56,7 @@ public class PlayerStatus : MonoBehaviour
             Debug.Log("castable set to negative! ");
             moveable = 0;
         }
+
+        gameObject.GetComponent<SpriteRenderer>().flipX = !isFacingRight;
     }
 }

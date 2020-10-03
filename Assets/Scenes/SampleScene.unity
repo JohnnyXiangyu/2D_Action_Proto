@@ -344,6 +344,7 @@ MonoBehaviour:
   activateSkill: 
   endTime: -1
   armorFactor: 1
+  isFacingRight: 1
 --- !u!95 &154139029
 Animator:
   serializedVersion: 3
@@ -1604,6 +1605,7 @@ MonoBehaviour:
   activateSkill: 
   endTime: -1
   armorFactor: 1
+  isFacingRight: 1
 --- !u!1 &1898138501
 GameObject:
   m_ObjectHideFlags: 0
