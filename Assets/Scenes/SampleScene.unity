@@ -178,10 +178,11 @@ GameObject:
   - component: {fileID: 154139024}
   - component: {fileID: 154139023}
   - component: {fileID: 154139022}
-  - component: {fileID: 154139026}
-  - component: {fileID: 154139027}
-  - component: {fileID: 154139028}
   - component: {fileID: 154139029}
+  - component: {fileID: 154139030}
+  - component: {fileID: 154139028}
+  - component: {fileID: 154139027}
+  - component: {fileID: 154139026}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -300,14 +301,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 154139021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f0dc60242056644d86dc5e07c103f60, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e295c8aa9933584994e82e1e68d5f1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 154139023}
-  cd: {fileID: 0}
-  unitPerSecond: 2
-  rightKey: 275
-  leftKey: 276
+  health: 100
+  effectsNextFrame: []
+  effectTakingOver: {fileID: 0}
+  effectsBeforeHurt: []
+  effectsAfterHurt: []
+  upcomingDamage: 0
 --- !u!114 &154139027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,13 +319,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 154139021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 659d40508ef4bf748b3135d9ad653e70, type: 3}
+  m_Script: {fileID: 11500000, guid: 092bcf1e80406a44ebb80f592a5dfde0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: {fileID: 7171079844272716740, guid: f96e7db983b7a864792919174f10b21d, type: 3}
-  skills: []
-  attackKey: 101
-  skillKeys: 
+  skillKey1: 113
+  skillKey2: 97
+  actionLock: 0
+  stats: {fileID: 154139026}
 --- !u!114 &154139028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,18 +335,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 154139021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d911803542bbfac4881e997807d18353, type: 3}
+  m_Script: {fileID: 11500000, guid: a3b9b921c033547479d991731c33c938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  mana: 100
-  moveable: 0
-  attackable: 0
-  castable: 0
-  activateSkill: 
-  endTime: -1
-  armorFactor: 1
-  isFacingRight: 1
+  playerAnimator: {fileID: 154139029}
+  stats: {fileID: 0}
+  effectsBeforeAttack: []
+  effectsAfterAttack: []
+  range: 0
+  damage: 0
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  attackCoolDown: 0
+  attackKey: 101
+  upcomingRange: 0
+  upcomingDamage: 0
 --- !u!95 &154139029
 Animator:
   serializedVersion: 3
@@ -364,6 +370,34 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &154139030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154139021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3b9b6171cd38844a2a6b4d02aec1a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  landscape: []
+  rb: {fileID: 0}
+  cd: {fileID: 0}
+  playerAnimator: {fileID: 154139029}
+  stats: {fileID: 154139026}
+  unitPerSecond: 1
+  jumpForce: 10
+  dashSpeed: 2
+  dashDuration: 0.5
+  dashCooldown: 1
+  rightFacing: 1
+  rightKey: 275
+  leftKey: 276
+  upKey: 273
+  downKey: 274
+  dashKey: 32
 --- !u!1 &417831178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1597,15 +1631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d911803542bbfac4881e997807d18353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  mana: 100
-  moveable: 0
-  attackable: 0
-  castable: 0
-  activateSkill: 
-  endTime: -1
-  armorFactor: 1
-  isFacingRight: 1
 --- !u!1 &1898138501
 GameObject:
   m_ObjectHideFlags: 0
