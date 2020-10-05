@@ -2,61 +2,80 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// container object of player status TODO: how to hook this to game manager?
-/// </summary>
 public class PlayerStatus : MonoBehaviour
 {
-    // resources //////////////////////////////////////////////////////////////
-    public float health = 100;
-    public float mana = 100;
+    // parameters ////////////////////////////////////////////////////
+    public float health = 100f;
 
-    // action locks ///////////////////////////////////////////////////////////
-    public int moveable = 0;
-    public int attackable = 0;
-    public int castable = 0;
+    // effects ///////////////////////////////////////////////////////
+    public List<GameObject> effectsNextFrame = new List<GameObject>(); // will execute in lateUpdate
+    public GameObject effectTakingOver = null; // will execute after effectsNextFrame, and is a singleton
+    public List<GameObject> effectsBeforeHurt = new List<GameObject>();
+    public List<GameObject> effectsAfterHurt = new List<GameObject>();
+    // public List<GameObject> effectsLasting = new List<GameObject>();
 
-    // skill system ///////////////////////////////////////////////////////////
-    public string activateSkill = "";
-    public float endTime = -1;
-
-    // special effects ////////////////////////////////////////////////////////
-    public float armorFactor = 1;
-    public Queue<float> shields;
-    public bool isFacingRight = true;
+    // temperory numbers for each damage /////////////////////////////
+    public float upcomingDamage = 0;
 
 
-    // public methods /////////////////////////////////////////////////////////
-    public void GetAttack(float rawDamage) {
-        float currentArmorFactor = armorFactor;
-        if (shields.Count > 0) {
-            currentArmorFactor *= shields.Dequeue();
+    // interfaces ////////////////////////////////////////////////////
+    public void TakeDamage(float rawDamage) {
+        upcomingDamage = rawDamage;
+
+        foreach (GameObject effect in effectsBeforeHurt) {
+            if (effect)
+                effect.GetComponent<SkillTemplate>().BeforeHurt();
         }
 
-        health -= rawDamage * currentArmorFactor;
+        health -= upcomingDamage;
+        if (health <= 0) {
+            health = 0;
+            Die();
+        }
+
+        foreach (GameObject effect in effectsAfterHurt) {
+            if (effect)
+                effect.GetComponent<SkillTemplate>().AfterHurt();
+        }
     }
 
-    // system methods /////////////////////////////////////////////////////////
+    public void GetHeal(float rawHealing) {
+        // add effects here if needed
+        health += rawHealing;
+    }
+
+    public void Die() {
+        Debug.Log("player dies");
+        // TODO: communicate with gamecontroller
+    }
+
+
+    // system message ////////////////////////////////////////////////
     private void Start() {
-        shields = new Queue<float>();
-        shields.Clear();
+        GameController.instance.playerObject = gameObject;
     }
 
-    void Update()
-    {
-        if (moveable < 0) {
-            Debug.Log("movable set to negative! ");
-            moveable = 0;
-        }
-        if (attackable < 0) {
-            Debug.Log("attackable set to negative! ");
-            moveable = 0;
-        }
-        if (castable < 0) {
-            Debug.Log("castable set to negative! ");
-            moveable = 0;
+    private void LateUpdate() {
+        foreach (GameObject effect in effectsNextFrame) {
+            if (effect) {
+                effect.GetComponent<SkillTemplate>().NextFrame();
+            }
         }
 
-        gameObject.GetComponent<SpriteRenderer>().flipX = !isFacingRight;
+        // sanitize immediate effects
+        List<GameObject> temp = new List<GameObject>();
+        foreach (GameObject effect in effectsNextFrame) {
+            if (effect) {
+                temp.Add(effect);
+            }
+        }
+        effectsNextFrame = temp;
+
+        if (effectTakingOver) {
+            effectTakingOver.GetComponent<SkillTemplate>().NextFrame();
+        }
+        else {
+            effectTakingOver = null;
+        }
     }
 }

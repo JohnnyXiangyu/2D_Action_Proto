@@ -1,57 +1,53 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-/// <summary>
-    /// stores and manages activation of skills (skills themselves will deactivate)
-/// </summary>
 public class PlayerSkills : MonoBehaviour
 {
-    // skill prefabs //////////////////////////////////////////////////////////
-    public GameObject attack; // bonded to attack button
-    public GameObject[] skills;
+    // control settings ////////////////////////////////////////
+    public KeyCode skillKey1 = KeyCode.Q;
+    public KeyCode skillKey2 = KeyCode.A;
 
-    // control settings ///////////////////////////////////////////////////////
-    public KeyCode attackKey = KeyCode.E;
-    public KeyCode[] skillKeys;
+    // lifecycle controls //////////////////////////////////////
+    public bool actionLock = false;
 
+    // game objects ////////////////////////////////////////////
+    public PlayerStatus stats = null;
 
-    // modify skillset ////////////////////////////////////////////////////////
-    public void RemoveSkill(int index) { // remove skill by index
-        if (index < skills.Length)
-            skills[index] = null;
+    // effect interface ////////////////////////////////////////
+    public void Lock(GameObject effect) {
+        if (effect == stats.effectTakingOver || effect == gameObject) {
+            actionLock = true;
+        }
     }
 
-    public void AddSkill(GameObject newSkill) { // add skill at the first empty slot
-        int i = 0;
-        foreach (GameObject obj in skills) {
-            if (obj == null) {
-                skills[i] = newSkill;
-            }
-            i++;
+    public void Unlock(GameObject effect) {
+        if (effect == stats.effectTakingOver || effect == gameObject) {
+            actionLock = false;
         }
     }
 
 
-    // update utilities ///////////////////////////////////////////////////////
-    private void CheckInput() { // check input and execute
-        
-        if (Input.GetKeyDown(attackKey) && gameObject.GetComponent<PlayerStatus>().attackable == 0) {
-            Instantiate(attack).GetComponent<SkillTemplate>().user = gameObject;
-        }
+    // skill behavior //////////////////////////////////////////
+    private void CastSkill_1() {
+        GameController.instance.CastSkill_1();
+    }
 
-        for (int i = 0; i < skills.Length; i++) {
-            if (Input.GetKeyDown(skillKeys[i]) && gameObject.GetComponent<PlayerStatus>().castable == 0) {
-                Instantiate(skills[i]).GetComponent<SkillTemplate>().user = gameObject;
-            }
-        }
+    private void CastSkill_2() {
+        GameController.instance.CastSkill_2();
     }
 
 
-    // system methods /////////////////////////////////////////////////////////
-    void Update()
-    {
-        CheckInput();
+    // system messages /////////////////////////////////////////
+    private void Update() {
+        if (actionLock)
+            return;
+
+        if (Input.GetKeyDown(skillKey1)) {
+            CastSkill_1();
+        }
+        if (Input.GetKeyDown(skillKey2)) {
+            CastSkill_2();
+        }
     }
 }
